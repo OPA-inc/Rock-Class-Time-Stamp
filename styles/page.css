@@ -1,0 +1,52 @@
+/* root */
+
+/* tags <> */
+
+
+input:user-invalid,
+textarea:user-invalid,
+.invalidInput:invalid {
+    background-color: lightcoral;
+}
+
+li {
+    padding: 3px;
+}
+
+/* classes . */
+
+/* --- Sticky notes --- */
+
+.bubble {
+    position: relative;
+    font-size: 1rem;
+    width: 15rem;
+    background: grey;
+    border-radius: 2rem;
+
+    /* Top Bottom Right Left */
+    padding: 0.3rem 2rem;
+
+    text-align: center;
+    color: #000;
+
+    margin-top: 1rem;
+}
+
+/* ids # */
+
+#theAllBox {
+    display: flex;
+}
+
+#textBox {
+    flex: 75%;
+}
+
+#key {
+    flex: 25%;
+    padding: 10px;
+    height: 1px;
+    position: sticky;
+    top: 5%;
+}

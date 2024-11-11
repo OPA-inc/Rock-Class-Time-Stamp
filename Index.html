@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Rock Class Timestamp</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="styles/page.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+	<script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+	<script src="js/script.js"></script>
+</head>
+
+<body>
+	<!--[if lt IE 7]>
+			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+
+	<!-- All -->
+	<div id="theAllBox">
+
+		<!-- Text boxes -->
+		<div id="textBox">
+			<form>
+				<!-- Student info -->
+
+				<label for="userInputFname">First name:</label>
+				<input type="text" id="userInputFname" name="userInputFname" class="userInput" data-name="First Name:">
+				<label for="userInputLname">Last name:</label>
+				<input type="text" id="userInputLname" name="userInputLname" class="userInput" data-name="Last Name:">
+
+				<input type="button" id="btnSave" class="button-add" onClick="saveAll('.userInput')" value="Save All">
+				<input type="button" id="btnSave" class="button-add" onClick="loadAll('.userInput')" value="Load All">
+				<input type="submit" value="Submit">
+				<br><br><br>
+
+				<div id="songStuff">
+
+					<!-- Song Name -->
+					<br>
+					<div>
+						<label for="userInputSong">Song:</label>
+						<input type="text" id="userInputSong" name="userInputSong" class="userInput" data-name="Song:">
+						<label for="userInputArtist">Artist:</label>
+						<input type="text" id="userInputArtist" name="userInputArtist" class="userInput"
+							data-name="Artist:">
+						<input type="button" id="btnAddSong" class="button-add" onClick="addSongTable()"
+							value="Add Song">
+						<input type="button" id="setSongSpotify" class="button-add" onClick="setSongSpotify(this)"
+							value="Set Song to Spotify">
+					</div>
+					<br><br>
+
+
+					<!-- Song info -->
+					<table id="userInputTable" class="dataTable display" style="width:100%">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Time</th>
+								<th>Describe</th>
+								<th>Analyze</th>
+								<th>Explain</th>
+								<th>Discuss</th>
+								<th></th>
+								<th><input type="button" class="button-add" onclick="deleteMyTable(this)" value="-"
+										disabled></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<select name="user InputType" class="userInput" data-name="Type:">
+										<option value="SigMo">Significant Moment</option>
+										<option value="Change">Change</option>
+										<option value="IntElk">Interesting Element</option>
+									</select>
+								</td>
+								<td>
+									<input type="text" class="userInput" placeholder="00:00"
+										pattern="(\d{1,2}[\:\.]){1,2}\d{1,2}" data-focus-key="timeKey"
+										data-name="Time Stamp:" style="width: 4rem;">
+								</td>
+								<td>
+									<textarea class="userInput" data-focus-key="describeKey"
+										data-name="Describe:"></textarea>
+								</td>
+								<td>
+									<textarea class="userInput" data-focus-key="analyzeKey"
+										data-name="Analyze:"></textarea>
+								</td>
+								<td>
+									<textarea class="userInput" data-focus-key="explainKey"
+										data-name="Explain:"></textarea>
+								</td>
+								<td>
+									<textarea class="userInput" data-focus-key="discussKey"
+										data-name="Discuss:"></textarea>
+								</td>
+								<td>
+									<input type="button" class="button-add" onclick="addRow(this)" value="+">
+								</td>
+								<td>
+									<input type="button" class="button-add" onclick="deleteMyRow(this)" value="-"
+										disabled>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</form>
+		</div>
+
+		<!-- Key -->
+		<div id="key">
+			<div id="timeKey" class="bubble">
+				<b>Time</b>
+				<p>Timestamp (e.g., 0:45)</p>
+			</div>
+
+			<div id="describeKey" class="bubble">
+				<b>Describe</b>
+				<p>Describe what you hear at this point in the track.</p>
+			</div>
+
+			<div id="analyzeKey" class="bubble">
+				<b>Analyze</b>
+				<p>Analyze any notable changes in instrumentation, melody, rhythm, or dynamics.</p>
+			</div>
+
+			<div id="explainKey" class="bubble">
+				<b>Explain</b>
+				<p>Explain how this part of the track affects you emotionally.</p>
+			</div>
+
+			<div id="discussKey" class="bubble">
+				<b>Discuss</b>
+				<p>Discuss how this moment fits into the overall structure of the track and its impact on the listener's
+					experience.</p>
+			</div>
+		</div>
+	</div>
+
+
+
+</body>
+
+</html>
