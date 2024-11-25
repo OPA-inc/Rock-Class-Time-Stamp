@@ -39,12 +39,28 @@
 				<input type="button" id="btnSave" class="button-add" onClick="saveAll('.userInput')" value="Save All">
 				<input type="button" id="btnSave" class="button-add" onClick="loadAll('.userInput')" value="Load All">
 				<input type="submit" value="Submit">
+
+				<div id="spotifyBox" hidden>
+					<h1>Display your Spotify profile data</h1>
+
+					<section id="profile">
+						<h2>Logged in as <span id="displayName"></span></h2>
+						<span id="avatar"></span>
+						<ul>
+							<li>User ID: <span id="id"></span></li>
+							<li>Email: <span id="email"></span></li>
+							<li>Spotify URI: <a id="uri" href="#"></a></li>
+							<li>Link: <a id="url" href="#"></a></li>
+							<li>Profile Image: <span id="imgUrl"></span></li>
+						</ul>
+					</section>
+				</div>
+
 				<br><br><br>
 
 				<div id="songStuff">
 
 					<!-- Song Name -->
-					<br>
 					<div>
 						<label for="userInputSong">Song:</label>
 						<input type="text" id="userInputSong" name="userInputSong" class="userInput" data-name="Song:">
@@ -56,7 +72,7 @@
 						<input type="button" id="setSongSpotify" class="button-add" onClick="setSongSpotify(this)"
 							value="Set Song to Spotify">
 					</div>
-					<br><br>
+
 
 
 					<!-- Song info -->

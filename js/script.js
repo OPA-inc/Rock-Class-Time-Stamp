@@ -1,14 +1,14 @@
 
 // --- doc set up ---
 
-	// AUTHORIZE with Spotify (if needed)
-	// *************** REPLACE THESE VALUES! *************************
-	let client_id = 'a04eb273d28d4d9195294f6236545012';
-	// Use the following site to convert your regular url to the encoded version:
-	// https://www.url-encode-decode.com/
-	let redirect_uri = 'http%3A%2F%2F127.0.0.1%3A5500%2FIndex.html'; // GitHub Pages URL or whatever your public url to this app is
-	// *************** END *************************
-	
+// AUTHORIZE with Spotify (if needed)
+// *************** REPLACE THESE VALUES! *************************
+let client_id = 'a04eb273d28d4d9195294f6236545012';
+// Use the following site to convert your regular url to the encoded version:
+// https://www.url-encode-decode.com/
+let redirect_uri = 'http://localhost:5500/callback'; // GitHub Pages URL or whatever your public url to this app is
+// *************** END *************************
+
 
 window.onload = function () {
 
@@ -23,6 +23,8 @@ window.onload = function () {
 		order: [[0, 'asc']]
 	});
 
+
+	/*
 	// Helper Function to Extract Access Token for URL
 	const getUrlParameter = (sParam) => {
 		let sPageURL = window.location.search.substring(1),////substring will take everything after the https link and split the #/&
@@ -59,7 +61,7 @@ window.onload = function () {
 			console.log(data)
 		}
 	});
-
+*/
 }
 
 function addAttributes(item) {
@@ -113,7 +115,7 @@ function saveAll(inputs) {
 	});
 
 	console.log("Saving done");
-};
+}
 
 
 //not working
@@ -134,7 +136,7 @@ function loadAll(inputs) {
 		}
 	})
 	console.log("Loading done");
-};
+}
 
 // --- Focus ---
 
@@ -218,7 +220,7 @@ function addRow(tableID) {
 		</td><td>
 		<input type="button" class="button-add" onclick="deleteMyRow(this)" value="-">
 	</td>
-</tr>`);
+	</tr>`);
 
 	document.querySelectorAll('.userInput').forEach((item) => { addAttributes(item) });
 
@@ -259,17 +261,20 @@ function addSongTable(tableID) {
 
 
 	$('#songStuff').append(`
+
+	<br><br><br>
+
 	<div data-removable="true">
 	<!-- Song Name -->
-	<br><br><br>
+
 	<label for="userInputSong">Song:</label>
 	<input type="text" name="userInputSong" class="userInput">
 	<label for="userInputArtist">Artist:</label>
 	<input type="text"name="userInputArtist" class="userInput">
 	<input type="button" class="button-add" onClick="addSongTable()" value="Add Song">
-	<input type="button" class="button-add" onClick="setSongSpotify()"
+	<input type="button" class="button-add" onClick="setSongSpotify(this)"
 		value="Set Song to Spotify">
-	<br><br>
+
 	<!-- Song info -->
 	<table id="${tableID}" class="dataTable display" style="width:100%">
 		<thead>
@@ -318,6 +323,8 @@ function setSongSpotify(item) {
 
 }
 
+/*
+
 const getRefreshToken = async () => {
 
 	// refresh token that has been previously stored
@@ -346,3 +353,123 @@ const getRefreshToken = async () => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+//let client_id = 'a04eb273d28d4d9195294f6236545012';
+
+
+
+
+
+
+const clientId = client_id; // Replace with your client ID
+const code = params.get("code");
+
+if (!code) {
+	redirectToAuthCodeFlow(clientId);
+} else {
+	const accessToken = await getAccessToken(clientId, code);
+	const profile = await fetchProfile(accessToken);
+	console.log(profile);
+	populateUI(profile);
+}
+
+async function redirectToAuthCodeFlow(clientId) {
+	const verifier = generateCodeVerifier(128);
+	const challenge = await generateCodeChallenge(verifier);
+
+	localStorage.setItem("verifier", verifier);
+
+	const params = new URLSearchParams();
+	params.append("client_id", clientId);
+	params.append("response_type", "code");
+	params.append("redirect_uri", "http://localhost:5500/callback");
+	params.append("scope", "user-read-private user-read-email");
+	params.append("code_challenge_method", "S256");
+	params.append("code_challenge", challenge);
+
+	document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+}
+
+function generateCodeVerifier(length) {
+	let text = '';
+	let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+	for (let i = 0; i < length; i++) {
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+	return text;
+}
+
+async function generateCodeChallenge(codeVerifier) {
+	const data = new TextEncoder().encode(codeVerifier);
+	const digest = await window.crypto.subtle.digest('SHA-256', data);
+	return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
+		.replace(/\+/g, '-')
+		.replace(/\//g, '_')
+		.replace(/=+$/, '');
+}
+
+async function getAccessToken(clientId, code) {
+	const verifier = localStorage.getItem("verifier");
+
+	const params = new URLSearchParams();
+	params.append("client_id", clientId);
+	params.append("grant_type", "authorization_code");
+	params.append("code", code);
+	params.append("redirect_uri", "http://localhost:5500/callback");
+	params.append("code_verifier", verifier);
+
+	const result = await fetch("https://accounts.spotify.com/api/token", {
+		method: "POST",
+		headers: { "Content-Type": "application/x-www-form-urlencoded" },
+		body: params
+	});
+
+	const { access_token } = await result.json();
+	return access_token;
+}
+
+async function fetchProfile(token) {
+	const result = await fetch("https://api.spotify.com/v1/me", {
+		method: "GET", headers: { Authorization: `Bearer ${token}` }
+	});
+
+	return await result.json();
+}
+
+async function fetchPlayData(token) {
+	const result = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+		method: "GET", headers: { Authorization: `Bearer ${token}` }
+	});
+
+	return await result.json();
+}
+
+function populateUI(profile) {
+	document.getElementById("displayName").innerText = profile.display_name;
+	if (profile.images[0]) {
+		const profileImage = new Image(200, 200);
+		profileImage.src = profile.images[0].url;
+		document.getElementById("avatar").appendChild(profileImage);
+		document.getElementById("imgUrl").innerText = profile.images[0].url;
+	}
+	document.getElementById("id").innerText = profile.id;
+	document.getElementById("email").innerText = profile.email;
+	document.getElementById("uri").innerText = profile.uri;
+	document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
+	document.getElementById("url").innerText = profile.href;
+	document.getElementById("url").setAttribute("href", profile.href);
+}
+
+
+*/
