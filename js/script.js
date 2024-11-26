@@ -201,7 +201,7 @@ function addRow(tableID) {
 		</select>
 	</td>
 	<td>
-		<input type="text" class="userInput" placeholder="00:00" pattern="(\d{1,2}[\:\.]){1,2}\d{1,2}" data-focus-key="timeKey" style="width: 4rem;" data-name="Time Stamp:">
+		<input type="text" class="userInput" placeholder="00:00" pattern="(\\d{1,2}[\\:\\.]){1,2}\\d{1,2}" data-focus-key="timeKey" style="width: 4rem;" data-name="Time Stamp:">
 	</td>
 	<td>
 		<textarea class="userInput" data-focus-key="describeKey" data-name="Describe:"></textarea>
