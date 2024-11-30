@@ -13,6 +13,10 @@ let redirect_uri = 'http://localhost:5500/callback'; // GitHub Pages URL or what
 window.onload = function () {
 
 	console.log("Hello World! - Setting up");
+
+	addSongTable(null, true)
+
+
 	document.querySelectorAll('.userInput').forEach((item) => { addAttributes(item) });
 
 	new DataTable('table.display', {
@@ -20,9 +24,8 @@ window.onload = function () {
 		paging: false,
 		ordering: false,
 		bInfo: false,
-		order: [[0, 'asc']]
-	});
-
+		order: [[1, 'asc']]
+	})
 
 	/*
 	// Helper Function to Extract Access Token for URL
@@ -62,12 +65,19 @@ window.onload = function () {
 		}
 	});
 */
+
+	console.log("Hello World! - Set up is done");
+
 }
 
 function addAttributes(item) {
 
 	item.required = true;
 	item.setAttribute("onblur", `iiClassCheck(this)`);
+
+	if (item.tagName == 'TEXTAREA') {
+		item.addEventListener("input", countWord)
+	}
 
 	if (item.dataset.focusKey) {
 		item.setAttribute("onfocus", `keyFocus(${item.dataset.focusKey})`);
@@ -77,7 +87,6 @@ function addAttributes(item) {
 	}
 
 }
-
 
 // --- Saving ---
 
@@ -118,7 +127,10 @@ function saveAll(inputs) {
 }
 
 
-//not working
+//not working 
+/* try to work with this?
+
+document.querySelectorAll('textarea').forEach((item) => {item.innerText = 'Foo'}) */
 function loadAll(inputs) {
 	all_Inputs = $(inputs);
 
@@ -187,12 +199,18 @@ function findTableParent(childOfTagID, targetTagName) {
 
 
 
-function addRow(tableID) {
+function addRow(tableID, firstTable = false) {
 
 	tableID = findTableParent(tableID, 'TABLE');
 
-	//yeah working my way up the table only to work my way down if probly not good but at this point i just need it to work
-	$(tableID).find('tbody').append(`<tr>
+	isFirst = ''
+	if (firstTable) {
+		isFirst = 'disabled'
+	}
+
+	//yeah working my way up the table only to work my way down if probly not good but at this point i just need it to work, YAY Tech Debt!
+	$(tableID).find('tbody').append(`
+	<tr>
 	<td>
 		<select name="userInputType" class="userInput" data-name="Type:">
 			<option value="SigMo">Significant Moment</option>
@@ -218,9 +236,12 @@ function addRow(tableID) {
 	<td>
 		<input type="button" class="button-add" onclick="addRow(this)" value="+">
 		</td><td>
-		<input type="button" class="button-add" onclick="deleteMyRow(this)" value="-">
+		<input type="button" class="button-add" onclick="deleteMyRow(this)" value="-" ${isFirst}>
 	</td>
-	</tr>`);
+	</tr>
+	`);
+
+
 
 	document.querySelectorAll('.userInput').forEach((item) => { addAttributes(item) });
 
@@ -252,19 +273,27 @@ function deleteMyTable(r) {
 // Add table
 tableIDIndex = 1;
 
-function addSongTable(tableID) {
+function addSongTable(tableID, firstTable = false) {
 
 	if (tableID == null) {
 		tableID = "tableID" + tableIDIndex
 		tableIDIndex++
 	}
 
+	removeable = true
+	isFirst = ''
+
+	if (firstTable) {
+		isFirst = 'disabled'
+		isRemoveable = false
+	}
 
 	$('#songStuff').append(`
 
-	<br><br><br>
+	
 
-	<div data-removable="true">
+	<div data-removable="${isRemoveable}" style="padding: 25px 0px">
+	
 	<!-- Song Name -->
 
 	<label for="userInputSong">Song:</label>
@@ -273,7 +302,7 @@ function addSongTable(tableID) {
 	<input type="text"name="userInputArtist" class="userInput">
 	<input type="button" class="button-add" onClick="addSongTable()" value="Add Song">
 	<input type="button" class="button-add" onClick="setSongSpotify(this)"
-		value="Set Song to Spotify">
+		value="Set Song & timestamp from Spotify">
 
 	<!-- Song info -->
 	<table id="${tableID}" class="dataTable display" style="width:100%">
@@ -286,17 +315,67 @@ function addSongTable(tableID) {
 				<th>Explain</th>
 				<th>Discuss</th>
 				<th></th>
-				<th><input type="button" class="button-add" onclick="deleteMyTable(this)" value="-"></th>
+				<th><input type="button" class="button-add" onclick="deleteMyTable(this)" value="-" ${isFirst}></th>
 			</tr>
 		</thead>
 		<tbody>
 		</tbody>
 	</table>
 	`);
-	addRow(tableID);
+	addRow(tableID, firstTable);
 	document.querySelectorAll('.userInput').forEach((item) => { addAttributes(item) });
 
 }
+
+
+// word count (some got moved to onload)
+function changeVis() {
+	if ($('#userWC')[0].checked === true) {
+		$('#wordCount').show()
+	}
+	else {
+		$('#wordCount').hide()
+	}
+}
+
+
+
+
+
+function countWords(target) {
+
+	let res = [];
+	let str = target.value
+		.replace(/[\t\n\r\.\?\!]/gm, " ").split(" ");
+	str.map((s) => {
+		let trimStr = s.trim();
+		if (trimStr.length > 0) {
+			res.push(trimStr);
+		}
+	});
+
+	return res.length;
+}
+
+
+
+
+function countWord() {
+	var arrCount = $('TEXTAREA')
+		.map((i, val) => countWords(val))
+		.toArray()
+		.reduce((total, element) => total + element,0)
+
+	$("#wordCountNum")[0]
+		.innerText = arrCount;
+}
+
+
+
+
+
+
+
 
 // spotify
 
@@ -322,6 +401,17 @@ function setSongSpotify(item) {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 
